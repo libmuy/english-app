@@ -1,6 +1,0 @@
-[submodule "submodules/backend"]
-	path = submodules/backend
-	url = git@github.com:libmuy/english-app-backend.git
-[submodule "submodules/frontend"]
-	path = submodules/frontend
-	url = git@github.com:libmuy/english-app-frontend.git
