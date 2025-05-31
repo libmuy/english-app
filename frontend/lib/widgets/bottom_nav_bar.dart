@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../providers/service_locator.dart';
 import '../pages/home_page.dart';
 import '../pages/category_page.dart';
+import '../pages/calendar_page.dart'; // Added
 import '../pages/favorites_page.dart';
 import '../pages/setting_page.dart';
 import '../utils/snack_bar_service.dart';
@@ -21,6 +22,7 @@ class BottomNavBarState extends State<BottomNavBar> {
     HomePage(),
     CategoryPage(),
     FavoritePage(),
+    CalendarPage(), // Added
     SettingPage(),
   ];
 
@@ -72,6 +74,10 @@ class BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite),
             label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today), // Added
+            label: 'Calendar', // Added
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),

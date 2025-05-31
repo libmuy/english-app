@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'providers/service_locator.dart';
 import 'providers/auth_provider.dart';
 import 'pages/login_page.dart';
+import 'pages/calendar_page.dart'; // Added
 import 'providers/setting_provider.dart';
 import 'widgets/bottom_nav_bar.dart';
 import 'theme.dart';
@@ -42,7 +43,11 @@ class MyApp extends StatelessWidget {
                 valueListenable: authProvider.isLoggedInNotifier,
                 builder: (contex, isLogin, _) {
                   return isLogin ? const BottomNavBar() : const LoginPage();
-                }));
+                }),
+            routes: { // Added routes map
+              CalendarPage.routeName: (ctx) => const CalendarPage(),
+            },
+          );
         });
 
 

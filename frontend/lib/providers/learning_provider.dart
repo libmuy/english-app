@@ -496,6 +496,29 @@ class LearningProvider {
       res.fav = isFavResource(res) ?? false;
     }
   }
+
+  // ======================================================
+  // 📄 fetch DAILY LEARNING SUMMARY
+  // ======================================================
+  Future<List<DailySummary>> fetchDailyLearningSummary() async {
+    _log.debug('fetch Daily Learning Summary');
+
+    final response = await httpRequest(
+      'get_daily_learning_summary.php',
+      // No body needed if using GET and token is handled by httpRequest or if endpoint uses POST with token in body by default
+    );
+
+    // Assuming httpRequest throws an error for non-200 responses,
+    // otherwise, add status code checking here.
+    // e.g., if (response.statusCode != 200) { throw Exception('Failed to load daily summary'); }
+
+    final List<dynamic> data = jsonDecode(response.body);
+    if (data.isEmpty) {
+      return [];
+    }
+
+    return data.map<DailySummary>((json) => DailySummary.fromJson(json)).toList();
+  }
 }
 
 class ReviewInfo {
@@ -508,6 +531,20 @@ class ReviewInfo {
     return ReviewInfo(
       json['need_to_review_count'] as int,
       json['today_learned_count'] as int,
+    );
+  }
+}
+
+class DailySummary {
+  final DateTime date;
+  final int sentenceCount;
+
+  DailySummary({required this.date, required this.sentenceCount});
+
+  factory DailySummary.fromJson(Map<String, dynamic> json) {
+    return DailySummary(
+      date: DateTime.parse(json['date']),
+      sentenceCount: json['sentence_count'] as int,
     );
   }
 }
