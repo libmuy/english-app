@@ -4,6 +4,7 @@ import '../providers/learning_provider.dart';
 import 'package:simple_logging/simple_logging.dart';
 import '../widgets/resource_widget.dart';
 import '../providers/service_locator.dart';
+import './course_sentences_overview_page.dart'; // Adjust path if necessary, e.g. '../pages/course_sentences_overview_page.dart'
 
 final _log = Logger('CategoryList', level: LogLevel.debug);
 
@@ -27,6 +28,19 @@ class CoursePage extends StatelessWidget {
                     return Text(course.name);
                   });
             }),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list_alt), // Icon for viewing all sentences
+            tooltip: 'All Sentences', // Tooltip for the button
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => CourseSentencesOverviewPage(courseId: courseId),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: FutureBuilder(
           future: courseFuture,

@@ -41,6 +41,16 @@ class LearningProvider {
   List<Category> get categories => _categories;
   String? get errorMessage => _errorMessage;
 
+  Future<String> getAudioUrl(String audioFileName) async {
+    final baseApiUrl = satuanAppConfig.apiBaseUrl;
+    _log.info('Fetching audio URL for: $audioFileName using base: $baseApiUrl');
+    if (audioFileName.isEmpty) {
+      _log.warning('Audio file name is empty.');
+      return '';
+    }
+    return '$baseApiUrl/get_audio.php?id=$audioFileName';
+  }
+
   // ======================================================
   // 📄 fetch CATEGORY
   // ======================================================
