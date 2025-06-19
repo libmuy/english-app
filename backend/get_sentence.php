@@ -120,6 +120,32 @@ function getFavoriteSentencesByEpisode($userId, $favoriteListId, $episodeId) {
     ];
 }
 
+function getSentencesByCourseId($userId, $courseId, $pageSize, $offset) {
+    global $conn;
+
+    $countQuery = "SELECT COUNT(*)
+                   FROM sentence_master sm
+                   INNER JOIN episode_master em ON sm.episode_id = em.id
+                   WHERE em.course_id = ?";
+    $totalCount = queryRecordCount($countQuery, "i", $courseId);
+
+    $query = "SELECT sm.id, sm.episode_id, sm.sentence_idx, sm.start_time, sm.end_time, sm.english, sm.chinese,
+              IF(fs.sentence_id IS NOT NULL, 1, 0) AS is_fav, sm.has_description
+              FROM sentence_master sm
+              INNER JOIN episode_master em ON sm.episode_id = em.id
+              LEFT JOIN favorite_sentence fs ON fs.sentence_id = sm.id AND fs.user_id = ?
+              WHERE em.course_id = ?
+              LIMIT ? OFFSET ?";
+
+    $sentences = querySentences($query, "iiii", $userId, $courseId, $pageSize, $offset);
+
+    return [
+        'total_count' => $totalCount,
+        'offset' => $offset,
+        'sentences' => $sentences
+    ];
+}
+
 function getFavoriteSentencesByCourse($userId, $favoriteListId, $courseId, $pageSize, $offset) {
     global $conn;
 
@@ -207,6 +233,19 @@ switch ($type) {
         break;
     case 'episode':
         $sentences = getSentencesByEpisode($userId, $episodeId);
+        break;
+    case 'course':
+        if ($courseId === null) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing course_id for type "course"']);
+            exit();
+        }
+        if ($pageSize === null || $offset === null) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Missing page_size or offset for type "course"']);
+            exit();
+        }
+        $sentences = getSentencesByCourseId($userId, $courseId, $pageSize, $offset);
         break;
     default:
         http_response_code(400);

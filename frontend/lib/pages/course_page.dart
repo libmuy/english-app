@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/pages/course_sentences_overview_page.dart';
 import '../utils/utils.dart';
 import '../providers/learning_provider.dart';
 import 'package:simple_logging/simple_logging.dart';
@@ -27,6 +28,32 @@ class CoursePage extends StatelessWidget {
                     return Text(course.name);
                   });
             }),
+        actions: [
+          FutureBuilder(
+            future: courseFuture, // Use the same future
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.connectionState == ConnectionState.done) {
+                final course = snapshot.data!;
+                return IconButton(
+                  icon: const Icon(Icons.list_alt_rounded), // Or Icons.view_list, Icons.article
+                  tooltip: 'View All Sentences', // Localize this if possible
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CourseSentencesOverviewPage(
+                          courseId: course.id,
+                          courseName: course.name,
+                        ),
+                      ),
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink(); // Return empty if data not ready
+            },
+          ),
+        ],
       ),
       body: FutureBuilder(
           future: courseFuture,
